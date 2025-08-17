@@ -1,0 +1,34 @@
+@model escola_dos_catioros.Models.Catioro
+
+@{
+    ViewData["Title"] = "cadastrar catioro";
+}
+
+<h1>Criar um novo Catioro</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Nome"></label>
+        <input asp-for="Nome" class="form-control" />
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Idade"></label>
+        <input asp-for="Idade" class="form-control" type="number" />
+        <span asp-validation-for="Idade" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Raca"></label>
+        <input asp-for="Raca" class="form-control" />
+        <span asp-validation-for="Raca" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn">🐶criar</button>
+    @Html.ActionLink("🐕voltar","Index",routeValues: new { id = ""}, htmlAttributes: new { @class ="btn"})
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

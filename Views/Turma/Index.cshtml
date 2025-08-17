@@ -1,0 +1,20 @@
+@model IEnumerable<Turma>
+
+    @if(Model.Count() > 0){
+        <table class="table">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.Apelido)</th>
+            </tr>
+
+        @foreach (var c in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(@c.Apelido, "View", new { id = c.Id })</td>
+            </tr>
+        }
+        </table>
+
+    }else{
+        <p>não há turmas. comece criando alguma.</p>
+    }
+@Html.ActionLink("🏫cadastrar turma", "Create")

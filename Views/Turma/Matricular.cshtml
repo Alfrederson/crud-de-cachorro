@@ -1,0 +1,26 @@
+@model escola_dos_catioros.ViewModels.NovaMatriculaViewModel
+
+<h4>matricular catioro em @Model.Turma.Apelido</h4>
+
+@if (Model.NaoMatriculados.Count > 0)
+{
+    <form asp-action="Matricular" method="post">
+        <input type="hidden" name="TurmaId" value="@Model.Turma.Id" />
+        <div class="mb-3">
+            <label for="CatioroId" class="form-label">Escolha o doguineo:</label>
+            <select id="CatioroId" name="CatioroId" class="form-select" required>
+                @foreach (var d in Model.NaoMatriculados)
+                {
+                    <option value="@d.Id">@d.Nome</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn">🐶🎒matricular</button>
+        @Html.ActionLink("🔙cancelar","View",routeValues: new { id = @Model.Turma.Id}, htmlAttributes: new { @class ="btn"})
+    </form>
+}
+else
+{
+    <h4 class="text-danger">todos os catioros já estão matriculados nesta turma!</h4>
+    @Html.ActionLink("🤷fazer o que?","View",routeValues: new { id = @Model.Turma.Id}, htmlAttributes: new { @class ="btn"})
+}

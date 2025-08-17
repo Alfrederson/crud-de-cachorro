@@ -1,0 +1,30 @@
+@model escola_dos_catioros.ViewModels.TurmaViewModel;
+
+<h4>@Model.Turma.Apelido</h4>
+
+<p>matrículas</p>
+
+<table class="table">
+    <tr>
+        <th>aluno</th>
+        <td></td>
+    </tr>
+@foreach(var m in @Model.Turma.Matriculas){
+    <tr>
+        <td>@m.Catioro.Nome</td>        
+        <td>
+            @Html.ActionLink("desmatricular","Desmatricular", new {id = @m.Id}, htmlAttributes: new { @class ="btn"})
+        </td>
+    </tr>
+    
+}
+
+</table>
+
+@Html.ActionLink("🐕matricular catiorineo","Matricular", new {id = @Model.Turma.Id}, htmlAttributes: new { @class ="btn"})
+
+@if(@Model.Turma.Matriculas.Count() == 0){
+    @Html.ActionLink("🧨excluir turma","Delete", new {id = @Model.Turma.Id}, htmlAttributes: new { @class ="btn"})
+}
+
+@Html.ActionLink("🔙voltar","Index", null, htmlAttributes: new { @class ="btn"})

@@ -1,0 +1,22 @@
+@model escola_dos_catioros.Models.Turma;
+
+@{
+    ViewData["Title"] = "cadastrar turma";
+}
+
+<h1>cadastar turma</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Apelido"></label>
+        <input asp-for="Apelido" class="form-control" />
+        <span asp-validation-for="Apelido" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn">🏫criar</button>
+    @Html.ActionLink("🐕voltar","Index",routeValues: new { id = ""}, htmlAttributes: new { @class ="btn"})
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

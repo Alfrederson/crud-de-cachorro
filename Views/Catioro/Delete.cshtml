@@ -1,0 +1,14 @@
+@model escola_dos_catioros.Models.Catioro
+
+
+<h4>Tem certeza que quer apagar @Model.Nome?</h4>
+<p>Isso é irreversível.</p>
+
+@using (Html.BeginForm()){
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+
+    <button type="submit" class="btn">🗑️confirmar</button>
+    @Html.ActionLink("🔙desistir", "View", new { id = @Model.Id }, new { @class = "btn btn-default" })
+
+}

@@ -1,0 +1,9 @@
+@model escola_dos_catioros.Models.Catioro
+<h1>🐶 @Model.Nome</h1>
+
+<p>Idade: @Model.Idade</p>
+<p>Raça: @Model.Raca</p>
+
+@Html.ActionLink("🐕voltar","Index",routeValues: new { id = ""}, htmlAttributes: new { @class ="btn"})
+@Html.ActionLink("📝editar","Edit",new { id = @Model.Id }, new { @class = "btn" })
+@Html.ActionLink("🪦deletar","Delete",new { id = @Model.Id}, new { @class = "btn" })
