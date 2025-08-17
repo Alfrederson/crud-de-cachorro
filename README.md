@@ -1,6 +1,6 @@
 # escola dos catioros
 
-Para o caixaverso ( Ruy Vieira )
+para o curso de C# da ada pro caixaverso ( Ruy Vieira )
 
 - .net 9.0
 
