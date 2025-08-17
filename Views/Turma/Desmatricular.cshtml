@@ -9,5 +9,5 @@
     <input type="hidden" name="CatioroId" value="@Model.CatioroId" />
 
     <button type="submit" class="btn">sim, expulsar @Model.Catioro.Nome</button>
-    @Html.ActionLink("não","View",routeValues: new { id = @Model.TurmaId}, htmlAttributes: new { @class ="btn"})
+    @Html.ActionLink("não","Detail",routeValues: new { id = @Model.TurmaId}, htmlAttributes: new { @class ="btn"})
 </form>

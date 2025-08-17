@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 using AspNetCoreGeneratedDocument;
 using escola_dos_catioros.Data;
 using escola_dos_catioros.Models;
@@ -28,13 +29,13 @@ public class TurmaController(ILogger<TurmaController> logger, EscolaDbContext co
 
     public ActionResult Create() => View();
 
-    public ActionResult Delete(int? id)
+    public async Task<ActionResult> DeleteAsync(int? id)
     {
         if (!id.HasValue)
         {
             return RedirectToAction("Index");
         }
-        var turma = _db.Turmas.FirstOrDefault(t => t.Id == id.Value);
+        var turma = await _db.Turmas.FirstOrDefaultAsync(t => t.Id == id.Value);
         if (turma == null)
             return View("NaoEncontrado");
         bool tem_matriculas = _db.Matriculas.Any(m => m.TurmaId == id.Value);
@@ -50,7 +51,7 @@ public class TurmaController(ILogger<TurmaController> logger, EscolaDbContext co
     }
 
     [HttpPost]
-    public ActionResult Create(Turma t)
+    public async Task<ActionResult> Create(Turma t)
     {
         if (!ModelState.IsValid)
         {
@@ -59,8 +60,8 @@ public class TurmaController(ILogger<TurmaController> logger, EscolaDbContext co
         try
         {
             _db.Turmas.Add(t);
-            _db.SaveChanges();
-            return RedirectToAction("View", new { id = t.Id });
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Detail", new { id = t.Id });
         }
         catch (DbUpdateException e)
         {
@@ -76,16 +77,16 @@ public class TurmaController(ILogger<TurmaController> logger, EscolaDbContext co
         return View(t);
     }
 
-    public ActionResult View(int? id)
+    public async Task<ActionResult> Detail(int? id)
     {
         if (!id.HasValue)
         {
             return RedirectToAction("Index");
         }
-        var t = _db.Turmas
+        var t = await _db.Turmas
             .Include(t => t.Matriculas)
             .ThenInclude(m => m.Catioro)
-            .FirstOrDefault(t => t.Id == id.Value);
+            .FirstOrDefaultAsync(t => t.Id == id.Value);
         if (t == null)
             return View("NaoEncontrado");
         var vm = new TurmaViewModel
@@ -96,22 +97,22 @@ public class TurmaController(ILogger<TurmaController> logger, EscolaDbContext co
         return View(vm);
     }
 
-    public ActionResult Matricular(int? id)
+    public async Task<ActionResult> Matricular(int? id)
     {
         if (!id.HasValue)
         {
             return RedirectToAction("Index");
         }
-        var t = _db.Turmas
+        var t = await _db.Turmas
                 .Include(t => t.Matriculas)
                 .ThenInclude(m => m.Catioro)
-                .FirstOrDefault(t => t.Id == id.Value);
+                .FirstOrDefaultAsync(t => t.Id == id.Value);
         if (t == null)
             return View("NaoEncontrado");
 
-        var nao_matriculados = _db.Catioros
+        var nao_matriculados = await _db.Catioros
             .Where(c => !t.Matriculas.Select(m => m.CatioroId).Contains(c.Id))
-            .ToList();
+            .ToListAsync();
 
         var vm = new NovaMatriculaViewModel
         {
@@ -124,7 +125,7 @@ public class TurmaController(ILogger<TurmaController> logger, EscolaDbContext co
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Matricular(int TurmaId, int CatioroId)
+    public async Task<ActionResult> Matricular(int TurmaId, int CatioroId)
     {
         // eu acho que dá um exception se for uma turma ou
         // catioro que não existem
@@ -136,41 +137,41 @@ public class TurmaController(ILogger<TurmaController> logger, EscolaDbContext co
         try
         {
             _db.Matriculas.Add(m);
-            _db.SaveChanges();
-            return RedirectToAction("View", new { id = TurmaId });
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Detail", new { id = TurmaId });
         }
         catch (DbUpdateException e)
         {
             if (e.GetBaseException() is not SqliteException sqlite_ex)
                 throw;
             ModelState.AddModelError("SQL", sqlite_ex.Message);
-            return Matricular(TurmaId);
+            return await Matricular(TurmaId);
         }
     }
 
 
     [HttpGet]
-    public ActionResult Desmatricular(int? id)
+    public async Task<ActionResult> Desmatricular(int? id)
     {
         if (!id.HasValue)
             return RedirectToAction("Index");
-        var m = _db.Matriculas
+        var m = await _db.Matriculas
                     .Include(m => m.Turma)
                     .Include(m => m.Catioro)
-                    .FirstOrDefault(m => m.Id == id.Value);
+                    .FirstOrDefaultAsync(m => m.Id == id.Value);
         if (m == null)
             return View("MatriculaNaoEncontrada");
         return View(m);
     }
 
     [HttpPost]
-    public ActionResult Desmatricular(Matricula m)
+    public async Task<ActionResult> DesmatricularAsync(Matricula m)
     {
         if (m == null || m.Id == 0)
             return View("Index");
         _db.Matriculas.Remove(m);
-        _db.SaveChanges();
-        return RedirectToAction("View",new { id = m.TurmaId });
+        await _db.SaveChangesAsync();
+        return RedirectToAction("Detail",new { id = m.TurmaId });
     }
 
     public ActionResult NaoEncontrado() => View();

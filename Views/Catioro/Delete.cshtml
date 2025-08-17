@@ -9,6 +9,6 @@
     @Html.HiddenFor(m => m.Id)
 
     <button type="submit" class="btn">🗑️confirmar</button>
-    @Html.ActionLink("🔙desistir", "View", new { id = @Model.Id }, new { @class = "btn btn-default" })
+    @Html.ActionLink("🔙desistir", "Detail", new { id = @Model.Id }, new { @class = "btn btn-default" })
 
 }

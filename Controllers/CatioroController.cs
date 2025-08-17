@@ -17,9 +17,9 @@ public class CatioroController(ILogger<CatioroController> logger, EscolaDbContex
     private readonly EscolaDbContext _db = context;
     private readonly ILogger<CatioroController> _logger = logger;
 
-    public ActionResult Index()
+    public async Task<ActionResult> Index()
     {
-        var lista_catioros = _db.Catioros.ToList();
+        var lista_catioros = await _db.Catioros.ToListAsync();
         return View(lista_catioros);
     }
 
@@ -27,7 +27,7 @@ public class CatioroController(ILogger<CatioroController> logger, EscolaDbContex
     public ActionResult Create() => View();
 
     [HttpPost]
-    public ActionResult Create(Catioro c)
+    public async Task<ActionResult> Create(Catioro c)
     {
         if (!ModelState.IsValid)
         {
@@ -36,8 +36,9 @@ public class CatioroController(ILogger<CatioroController> logger, EscolaDbContex
         try
         {
             _db.Catioros.Add(c);
-            _db.SaveChanges();
-            return View("View",c);
+            await _db.SaveChangesAsync();
+            Console.WriteLine($"Redirecionando para Details com id={c.Id}");
+            return RedirectToAction("Detail", new { id = c.Id });
         }
         catch (DbUpdateException e)
         {
@@ -61,30 +62,30 @@ public class CatioroController(ILogger<CatioroController> logger, EscolaDbContex
 
 
     [HttpGet]
-    public ActionResult Edit(int? id)
+    public async Task<ActionResult> Edit(int? id)
     {
         if (!id.HasValue)
         {
             return RedirectToAction("Index");
         }
-        var catioro = _db.Catioros.FirstOrDefault(c => c.Id == id.Value);
+        var catioro = await _db.Catioros.FirstOrDefaultAsync(c => c.Id == id.Value);
         if (catioro == null)
             return View("NaoEncontrado");
         return View(catioro);
     }
 
     [HttpPost]
-    public ActionResult Edit(Catioro c)
+    public async Task<ActionResult> Edit(Catioro c)
     {
         if (!ModelState.IsValid)
         {
             return View(c);
         }
-        _db.Entry(c).State = EntityState.Modified;
         try
         {
-            _db.SaveChanges();
-            return RedirectToAction("View", new { id = c.Id });
+            _db.Entry(c).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Detail", new { id = c.Id });
         }
         catch (DbUpdateException e)
         {
@@ -101,14 +102,14 @@ public class CatioroController(ILogger<CatioroController> logger, EscolaDbContex
 
     }
 
-    public ActionResult View(int? id)
+    public async Task<ActionResult> Detail(int? id)
     {
         if (!id.HasValue)
             return RedirectToAction("Index");
-        var catioro = _db.Catioros.FirstOrDefault(c => c.Id == id.Value);
+        var catioro = await _db.Catioros.FirstOrDefaultAsync(c => c.Id == id.Value);
         if (catioro == null)
             return View("NaoEncontrado");
-        return View("View", catioro);        
+        return View(catioro);        
     }
 
     [HttpGet]
@@ -125,15 +126,16 @@ public class CatioroController(ILogger<CatioroController> logger, EscolaDbContex
     }
 
     [HttpPost]
-    public ActionResult Delete(Catioro c)
+    public async Task<ActionResult> Delete(Catioro c)
     {
         if (c == null || c.Id == 0)
         {
             return View("NaoEncontrado");
         }
         _db.Catioros.Remove(c);
-        _db.SaveChanges();
-        return View("Deleted");
+        await _db.SaveChangesAsync();
+        Console.WriteLine($"Redirecionando para Deleted");
+        return RedirectToAction("Deleted");
     }
 
     public ActionResult Deleted()

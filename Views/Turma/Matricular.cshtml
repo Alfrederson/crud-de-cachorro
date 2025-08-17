@@ -16,11 +16,11 @@
             </select>
         </div>
         <button type="submit" class="btn">🐶🎒matricular</button>
-        @Html.ActionLink("🔙cancelar","View",routeValues: new { id = @Model.Turma.Id}, htmlAttributes: new { @class ="btn"})
+        @Html.ActionLink("🔙cancelar","Detail",routeValues: new { id = @Model.Turma.Id}, htmlAttributes: new { @class ="btn"})
     </form>
 }
 else
 {
     <h4 class="text-danger">todos os catioros já estão matriculados nesta turma!</h4>
-    @Html.ActionLink("🤷fazer o que?","View",routeValues: new { id = @Model.Turma.Id}, htmlAttributes: new { @class ="btn"})
+    @Html.ActionLink("🤷fazer o que?","Detail",routeValues: new { id = @Model.Turma.Id}, htmlAttributes: new { @class ="btn"})
 }

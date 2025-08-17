@@ -28,7 +28,7 @@
         <span asp-validation-for="Raca" class="text-danger"></span>
     </div>
     <button type="submit" class="btn">💾salvar</button>
-    @Html.ActionLink("😕cancelar", "View", new { id = @Model.Id }, new { @class = "btn btn-default" })
+    @Html.ActionLink("😕cancelar", "Detail", new { id = @Model.Id }, new { @class = "btn btn-default" })
 }
 
 @* <form asp-action="Edit/{@Model.Id}" method="post">
